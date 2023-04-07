@@ -11,6 +11,7 @@ import com.imedia.oracle.reportentity.AppContractReport;
 import com.imedia.oracle.reportrepository.AppContractReportRepository;
 import com.imedia.oracle.repository.*;
 import com.imedia.service.cache.model.CacheLoginInfo;
+import com.imedia.service.device.UserDeviceService;
 import com.imedia.service.pickupaddress.model.ShopAddressDTO;
 import com.imedia.service.user.model.*;
 import com.imedia.service.wallet.WalletService;
@@ -53,10 +54,11 @@ public class UserService {
     private final BankAccountRepository bankAccountRepository;
     private final AppContractRepository appContractRepository;
     private final BankRepository bankRepository;
+    private final UserDeviceService userDeviceService;
 
     @Autowired
     public UserService(AppUserRepository appUserRepository, WalletService walletService,
-                       AppUserDeviceRepository appUserDeviceRepository, ShopProfileRepository shopProfileRepository, MapperFacade mapperFacade, AddressDAO addressDAO, ShopProfileDAO shopProfileDAO, ShipperProfileRepository shipperProfileRepository, AppContractReportRepository contractReportRepository, BankAccountRepository bankAccountRepository, AppContractRepository appContractRepository, BankRepository bankRepository) {
+                       AppUserDeviceRepository appUserDeviceRepository, ShopProfileRepository shopProfileRepository, MapperFacade mapperFacade, AddressDAO addressDAO, ShopProfileDAO shopProfileDAO, ShipperProfileRepository shipperProfileRepository, AppContractReportRepository contractReportRepository, BankAccountRepository bankAccountRepository, AppContractRepository appContractRepository, BankRepository bankRepository, UserDeviceService userDeviceService) {
         this.appUserRepository = appUserRepository;
         this.walletService = walletService;
         this.appUserDeviceRepository = appUserDeviceRepository;
@@ -69,6 +71,7 @@ public class UserService {
         this.bankAccountRepository = bankAccountRepository;
         this.appContractRepository = appContractRepository;
         this.bankRepository = bankRepository;
+        this.userDeviceService = userDeviceService;
     }
 
     public SignUpResponse register(SignUpRequest signUpRequest) {
@@ -92,7 +95,7 @@ public class UserService {
                             AppUser appUser = saveAppUser(signUpRequest, data.getAccount_epurse_id());
                             if (appUser == null)
                                 return new SignUpResponse(500, PreLoadStaticUtil.errorCodeWeb.get(500).getMessage());
-                            saveUserDevice(signUpRequest.getDeviceId(), appUser);
+                            userDeviceService.saveUserDevice(signUpRequest.getDeviceId(), appUser);
                             walletService.createUserWallet(appUser.getId(), data.getAccount_epurse_id());
                         }
                         return new SignUpResponse(200, PreLoadStaticUtil.errorCodeWeb.get(200).getMessage());
@@ -150,7 +153,7 @@ public class UserService {
         try {
             AppUser appUser = appUserRepository.findByPhone(getOTPRequest.getUsername());
             if (appUser != null) {
-                saveUserDevice(getOTPRequest.getDeviceId(), appUser);
+                userDeviceService.saveUserDevice(getOTPRequest.getDeviceId(), appUser);
                 ShopProfile shopProfile = shopProfileRepository.findByAppUserId(appUser.getId());
                 //Sync from ship profile
                 if (shopProfile == null) {
@@ -265,19 +268,19 @@ public class UserService {
         return new VerifyOTPResponse(500, errorCodes.get(500).getMessage(), null);
     }
 
-    public void saveUserDevice(String deviceToken, AppUser appUser) {
-        List<AppUserDevice> appUserDevices = appUserDeviceRepository.getExistByTokenAndAppUser(appUser.getId(), deviceToken);
-        if (appUserDevices != null && appUserDevices.size() == 0) {
-            AppUserDevice appUserDevice = new AppUserDevice();
-            appUserDevice.setAppUserId(BigDecimal.valueOf(appUser.getId()));
-            appUserDevice.setDeviceToken(deviceToken.trim());
-            appUserDevice.setShop(BigDecimal.ZERO);
-            appUserDevice.setEnabled(BigDecimal.ZERO);
-            appUserDevice.setConfirm("OTP");
-            appUserDeviceRepository.insertDevice(appUserDevice.getAppUserId(), appUserDevice.getConfirm(),
-                    appUserDevice.getDeviceToken());
-        }
-    }
+//    public void saveUserDevice(String deviceToken, AppUser appUser) {
+//        List<AppUserDevice> appUserDevices = appUserDeviceRepository.getExistByTokenAndAppUser(appUser.getId(), deviceToken);
+//        if (appUserDevices != null && appUserDevices.size() == 0) {
+//            AppUserDevice appUserDevice = new AppUserDevice();
+//            appUserDevice.setAppUserId(BigDecimal.valueOf(appUser.getId()));
+//            appUserDevice.setDeviceToken(deviceToken.trim());
+//            appUserDevice.setShop(BigDecimal.ZERO);
+//            appUserDevice.setEnabled(BigDecimal.ZERO);
+//            appUserDevice.setConfirm("OTP");
+//            appUserDeviceRepository.insertDevice(appUserDevice.getAppUserId(), appUserDevice.getConfirm(),
+//                    appUserDevice.getDeviceToken());
+//        }
+//    }
 
     private AppUser saveAppUser(SignUpRequest signUpRequest, Long accountEpurseId) {
         AppUser appUser = new AppUser();

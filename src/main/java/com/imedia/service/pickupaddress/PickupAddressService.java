@@ -12,6 +12,7 @@ import com.imedia.oracle.entity.ShopAddress;
 import com.imedia.oracle.repository.AppUserRepository;
 import com.imedia.oracle.repository.ShopAddressRepository;
 import com.imedia.oracle.repository.ShopProfileRepository;
+import com.imedia.service.geometry.GeometryService;
 import com.imedia.service.pickupaddress.model.CreatePickupAddressRequest;
 import com.imedia.service.pickupaddress.model.FilterPickupAddressResponse;
 import com.imedia.service.pickupaddress.model.GeometryData;
@@ -44,15 +45,17 @@ public class PickupAddressService {
     private final ShopProfileDAO shopProfileDAO;
     private final MapperFacade mapperFacade;
     private final PickupAddressDAO pickupAddressDAO;
+    private final GeometryService geometryService;
 
     @Autowired
-    public PickupAddressService(ShopProfileRepository shopProfileRepository, AppUserRepository appUserRepository, ShopAddressRepository shopAddressRepository, ShopProfileDAO shopProfileDAO, MapperFacade mapperFacade, PickupAddressDAO pickupAddressDAO) {
+    public PickupAddressService(ShopProfileRepository shopProfileRepository, AppUserRepository appUserRepository, ShopAddressRepository shopAddressRepository, ShopProfileDAO shopProfileDAO, MapperFacade mapperFacade, PickupAddressDAO pickupAddressDAO, GeometryService geometryService) {
         this.shopProfileRepository = shopProfileRepository;
         this.appUserRepository = appUserRepository;
         this.shopAddressRepository = shopAddressRepository;
         this.shopProfileDAO = shopProfileDAO;
         this.mapperFacade = mapperFacade;
         this.pickupAddressDAO = pickupAddressDAO;
+        this.geometryService = geometryService;
     }
 
     public BaseResponse createShopAddress(CreatePickupAddressRequest pickupAddressRequest,String username) throws Exception {

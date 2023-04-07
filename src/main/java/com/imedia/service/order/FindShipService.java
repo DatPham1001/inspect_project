@@ -35,9 +35,10 @@ public class FindShipService {
     private final OrderLogService orderLogService;
     private final OrderDetailRepository shipOrderDetailRepository;
     private final DetailSellingFeeRepository sellingFeeRepository;
+    private final CallBackService callBackService;
 
     @Autowired
-    public FindShipService(AppUserRepository appUserRepository, WalletService walletService, SvcOrderRepository orderRepository, SvcOrderDetailRepository orderDetailRepository, WalletLogRepository walletLogRepository, CarrierRepository carrierRepository, OrderLogService orderLogService, OrderDetailRepository shipOrderDetailRepository, DetailSellingFeeRepository sellingFeeRepository) {
+    public FindShipService(AppUserRepository appUserRepository, WalletService walletService, SvcOrderRepository orderRepository, SvcOrderDetailRepository orderDetailRepository, WalletLogRepository walletLogRepository, CarrierRepository carrierRepository, OrderLogService orderLogService, OrderDetailRepository shipOrderDetailRepository, DetailSellingFeeRepository sellingFeeRepository, CallBackService callBackService) {
         this.appUserRepository = appUserRepository;
         this.walletService = walletService;
         this.orderRepository = orderRepository;
@@ -47,6 +48,7 @@ public class FindShipService {
         this.orderLogService = orderLogService;
         this.shipOrderDetailRepository = shipOrderDetailRepository;
         this.sellingFeeRepository = sellingFeeRepository;
+        this.callBackService = callBackService;
     }
 
     public BaseResponse handleFindShip(SvcOrder order, List<SvcOrderDetail> orderDetails, AppUser appUser) {
@@ -90,7 +92,7 @@ public class FindShipService {
                 if (orderDetail.getChannel() != null &&
                         (orderDetail.getChannel().equals("AFF")
                                 || orderDetail.getChannel().equals("API"))) {
-                    callbackAffiliate(orderDetail, orderDetail.getStatus(), orderStatusEnum.message);
+                    callBackService.callbackAffiliate(orderDetail, orderDetail.getStatus(), orderStatusEnum.message);
                 }
                 orderDetailRepository.save(orderDetail);
             }

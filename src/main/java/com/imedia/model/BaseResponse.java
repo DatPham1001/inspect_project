@@ -22,7 +22,7 @@ public class BaseResponse {
     private String requestId;
     private Object data;
     @JsonIgnore
-    private static final HashMap<Integer, ErrorCodesWebshop> errorCodes = PreLoadStaticUtil.errorCodeWeb;
+    private static final HashMap<Integer, ErrorCodesWebshop> errorCodes =  PreLoadStaticUtil.errorCodeWeb;
     @JsonIgnore
     static final List<Integer> successCodes = Arrays.asList(99, 200, 600, 601, 612, 609, 700, 707, 720, 750, 760, 770, 780, 790, 2000);
 
@@ -48,35 +48,35 @@ public class BaseResponse {
         this.data = data;
     }
 
-    public BaseResponse(Integer status, String message) {
-        this.status = status;
-        this.message = message;
-        if (successCodes.contains(status))
-            this.code = 200;
-        else this.code = status;
-    }
-
-    public BaseResponse createWithReplace(Integer status, String message) {
-        ErrorCodesWebshop errorCodesWebshop = errorCodes.get(status);
-        BaseResponse baseResponse = new BaseResponse();
-        baseResponse.setStatus(errorCodesWebshop.getErrorCode());
-        baseResponse.setMessage(errorCodesWebshop.getMessage().replace("[x]", message));
-        if (successCodes.contains(status))
-            baseResponse.setCode(200);
-        else baseResponse.setCode(errorCodesWebshop.getErrorCode());
-        return baseResponse;
-    }
-
-    public BaseResponse createBase(Integer status, String message) {
-        ErrorCodesWebshop errorCodesWebshop = errorCodes.get(status);
-        BaseResponse baseResponse = new BaseResponse();
-        baseResponse.setStatus(errorCodesWebshop.getErrorCode());
-        baseResponse.setMessage(errorCodesWebshop.getMessage().replace("[x]", message));
-        if (successCodes.contains(status))
-            baseResponse.setCode(200);
-        else baseResponse.setCode(errorCodesWebshop.getErrorCode());
-        return baseResponse;
-    }
+//    public BaseResponse(Integer status, String message) {
+//        this.status = status;
+//        this.message = message;
+//        if (successCodes.contains(status))
+//            this.code = 200;
+//        else this.code = status;
+//    }
+//
+//    public BaseResponse createWithReplace(Integer status, String message) {
+//        ErrorCodesWebshop errorCodesWebshop = errorCodes.get(status);
+//        BaseResponse baseResponse = new BaseResponse();
+//        baseResponse.setStatus(errorCodesWebshop.getErrorCode());
+//        baseResponse.setMessage(errorCodesWebshop.getMessage().replace("[x]", message));
+//        if (successCodes.contains(status))
+//            baseResponse.setCode(200);
+//        else baseResponse.setCode(errorCodesWebshop.getErrorCode());
+//        return baseResponse;
+//    }
+//
+//    public BaseResponse createBase(Integer status, String message) {
+//        ErrorCodesWebshop errorCodesWebshop = errorCodes.get(status);
+//        BaseResponse baseResponse = new BaseResponse();
+//        baseResponse.setStatus(errorCodesWebshop.getErrorCode());
+//        baseResponse.setMessage(errorCodesWebshop.getMessage().replace("[x]", message));
+//        if (successCodes.contains(status))
+//            baseResponse.setCode(200);
+//        else baseResponse.setCode(errorCodesWebshop.getErrorCode());
+//        return baseResponse;
+//    }
 
     public BaseResponse(Integer status, String message, Integer type) {
         if (type == 1) {
@@ -105,24 +105,24 @@ public class BaseResponse {
         }
     }
 
-//    public BaseResponse(Integer status) {
-//        ErrorCodesWebshop errorCodesWebshop = errorCodes.get(status);
-//        this.status = errorCodesWebshop.getErrorCode();
-//        if (successCodes.contains(status))
-//            this.code = 200;
-//        else this.code = errorCodesWebshop.getErrorCode();
-//        if (status == 516) {
-//            try {
-//                this.message = errorCodesWebshop.getMessage() + ":" + AppConfig.getInstance().minWithdraw;
-//            } catch (Exception e) {
-//                this.message = errorCodesWebshop.getMessage();
-//            }
-//        } else if (status == 515) {
-//            try {
-//                this.message = errorCodesWebshop.getMessage() + ":" + AppConfig.getInstance().maxWithdraw;
-//            } catch (Exception e) {
-//                this.message = errorCodesWebshop.getMessage();
-//            }
-//        } else this.message = errorCodesWebshop.getMessage();
-//    }
+    public BaseResponse(Integer status) {
+        ErrorCodesWebshop errorCodesWebshop = errorCodes.get(status);
+        this.status = errorCodesWebshop.getErrorCode();
+        if (successCodes.contains(status))
+            this.code = 200;
+        else this.code = errorCodesWebshop.getErrorCode();
+        if (status == 516) {
+            try {
+                this.message = errorCodesWebshop.getMessage() + ":" + AppConfig.getInstance().minWithdraw;
+            } catch (Exception e) {
+                this.message = errorCodesWebshop.getMessage();
+            }
+        } else if (status == 515) {
+            try {
+                this.message = errorCodesWebshop.getMessage() + ":" + AppConfig.getInstance().maxWithdraw;
+            } catch (Exception e) {
+                this.message = errorCodesWebshop.getMessage();
+            }
+        } else this.message = errorCodesWebshop.getMessage();
+    }
 }

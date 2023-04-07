@@ -7,6 +7,8 @@ import com.imedia.oracle.entity.*;
 import com.imedia.oracle.repository.*;
 import com.imedia.service.pickupaddress.model.LocationData;
 import com.imedia.service.user.model.UserInfoAddressData;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,8 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@Getter
+@Setter
 public class PreLoadStaticUtil implements CommandLineRunner {
     private final ErrorCodeWebshopRepository errorCodeWebshopRepository;
     public static HashMap<Integer, ErrorCodesWebshop> errorCodeWeb = new HashMap<>();
