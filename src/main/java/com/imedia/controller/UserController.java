@@ -5,6 +5,7 @@ import com.imedia.config.authentication.JwtTokenUtil;
 import com.imedia.model.BaseResponse;
 import com.imedia.oracle.entity.ErrorCodesWebshop;
 import com.imedia.service.authenticate.model.SignInResponse;
+import com.imedia.service.otp.OtpService;
 import com.imedia.service.user.UserService;
 import com.imedia.service.user.model.*;
 import com.imedia.service.userwallet.UserWalletService;
@@ -28,14 +29,16 @@ public class UserController {
     static final Gson gson = new Gson();
     private final UserService userService;
     private final JwtTokenUtil jwtTokenUtil;
+    private final OtpService otpService;
     private final UserWalletService userWalletService;
     private static final HashMap<Integer, ErrorCodesWebshop> errorCodes = PreLoadStaticUtil.errorCodeWeb;
 
 
     @Autowired
-    public UserController(UserService userService, JwtTokenUtil jwtTokenUtil, UserWalletService userWalletService) {
+    public UserController(UserService userService, JwtTokenUtil jwtTokenUtil, OtpService otpService, UserWalletService userWalletService) {
         this.userService = userService;
         this.jwtTokenUtil = jwtTokenUtil;
+        this.otpService = otpService;
         this.userWalletService = userWalletService;
     }
 
@@ -51,7 +54,7 @@ public class UserController {
     @PostMapping("/public/verifyOTP")
     public ResponseEntity<?> verifyOTP(@RequestBody VerifyOTPRequest verifyOTPRequest) {
         logger.info("======VERIFY REQUEST===== " + gson.toJson(verifyOTPRequest));
-        VerifyOTPResponse verifyOTPResponse = userService.verifyOTP(verifyOTPRequest);
+        VerifyOTPResponse verifyOTPResponse = otpService.verifyOTP(verifyOTPRequest);
         verifyOTPResponse.setRequestId(verifyOTPRequest.getRequestId());
         logger.info("======VERIFY RESPONSE===== " + gson.toJson(verifyOTPResponse));
         return ResponseEntity.ok(verifyOTPResponse);

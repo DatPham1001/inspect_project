@@ -6,6 +6,7 @@ public class GetOTPRequest extends BaseRequest {
     private String username;
     private String phone;
     private String deviceId;
+    private int otpType;
 
     public GetOTPRequest() {
     }
@@ -14,6 +15,14 @@ public class GetOTPRequest extends BaseRequest {
         this.username = username;
         this.phone = phone;
         this.deviceId = deviceId;
+    }
+
+    public int getOtpType() {
+        return otpType;
+    }
+
+    public void setOtpType(int otpType) {
+        this.otpType = otpType;
     }
 
     public String getUsername() {

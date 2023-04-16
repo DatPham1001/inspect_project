@@ -178,7 +178,7 @@ public class AuthenticateService implements UserDetailsService {
                         AppUser appUser = saveAppUser(signInRequest, data.getAccount_epurse_id());
                         if (appUser == null)
                             return new SignInResponse(PreLoadStaticUtil.errorCodeWeb.get(500).getMessage(), 500);
-                        userService.saveUserDevice(signInRequest.getDeviceId(), appUser);
+//                        userService.saveUserDevice(signInRequest.getDeviceId(), appUser);
                         walletService.createUserWallet(appUser.getId(), data.getAccount_epurse_id());
                         handleCacheRemember(signInRequest, signInResponse);
                         handleCacheSocialId(appUser);

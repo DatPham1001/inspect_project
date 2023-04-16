@@ -43,7 +43,7 @@ public class AppUser implements Serializable {
     private String callbackUrl;
 
     private String company;
-    
+
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "CREATE_AT", updatable = false)
@@ -82,6 +82,16 @@ public class AppUser implements Serializable {
     private Integer ship = 0;
 
     private Integer shop = 0;
+
+    public Integer getOtpType() {
+        return otpType;
+    }
+
+    public void setOtpType(Integer otpType) {
+        this.otpType = otpType;
+    }
+
+    private Integer otpType = 0;
 
     private String types;
 
